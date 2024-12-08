@@ -1,4 +1,5 @@
 import express from 'express'
+import morgan from 'morgan'
 const app = express()
 
 let persons = [
@@ -27,6 +28,19 @@ let persons = [
 
 app.use(express.json())
 
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.date(req,res),
+    tokens.res(req, res, 'Content-Length'), '-',
+    tokens['response-time'](req, res), 'ms', JSON.stringify(req.body)
+  ].join(' ')
+}))
+
+
+
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
@@ -53,7 +67,7 @@ app.get('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (req, res) => {
     const newPerson = req.body;
     const id = Math.floor(Math.random() * 10000);
-    newPerson.id = id;
+    newPerson.id = id.toString();
 
     if(!persons.find(person => person.name === newPerson.name)) {
         persons = persons.concat(newPerson)
