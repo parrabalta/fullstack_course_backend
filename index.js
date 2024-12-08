@@ -1,5 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
+import cors from 'cors'
+
 const app = express()
 
 let persons = [
@@ -27,6 +29,7 @@ let persons = [
 
 app.use(express.static('dist'))
 app.use(express.json())
+app.use(cors())
 
 app.use(morgan(function (tokens, req, res) {
   return [
@@ -71,7 +74,7 @@ app.post('/api/persons', (req, res) => {
 
     if(!persons.find(person => person.name === newPerson.name)) {
         persons = persons.concat(newPerson)
-
+        console.log('del back vuelve esto: ', persons)
         res.json(persons)   
     } else {
         res.status(409).json({ 
@@ -86,6 +89,16 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
+})
+
+app.put('/api/persons/:id', (req, res) => {
+  const newPerson = req.body;
+  const id = req.params.id
+  const personIndex = persons.findIndex(person => person.id === id);
+  persons[personIndex] = { ...persons[personIndex], ...newPerson };
+
+
+  res.json(persons)
 })
 
 
