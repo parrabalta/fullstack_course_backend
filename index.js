@@ -25,7 +25,7 @@ let persons = [
     }
 ]
 
-
+app.use(express.static('dist'))
 app.use(express.json())
 
 app.use(morgan(function (tokens, req, res) {
