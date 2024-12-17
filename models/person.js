@@ -12,18 +12,18 @@ mongoose.set('strictQuery',false)
 console.log('connecting to', url)
 
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch(error => {
     console.log('error connecting to MongoDB:', error.message)
   })
-  
+
 
 const numberValidator = (val) => {
   return /^\d{2,3}-\d{6,}$/.test(val)
 }
-  
+
 
 
 const personSchema = new mongoose.Schema({
@@ -42,7 +42,7 @@ const personSchema = new mongoose.Schema({
     },
     required: [true, 'User phone number required']
   }
-  }
+}
 )
 
 personSchema.set('toJSON', {
@@ -54,4 +54,4 @@ personSchema.set('toJSON', {
 })
 
 
-export default mongoose.model('Person', personSchema);
+export default mongoose.model('Person', personSchema)

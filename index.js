@@ -1,4 +1,4 @@
-import 'dotenv/config' 
+import 'dotenv/config'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -30,26 +30,26 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (req, res) => {
-  const time = new Date();
+  const time = new Date()
   Person.find({}).then(persons => {
-    const phoneNumbers = persons.length;
+    const phoneNumbers = persons.length
     res.send(`<p>Phonebook has info for ${phoneNumbers} people</p><p>${time}</p>`)
   })
 
-    
+
 })
 
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-  .then(person => {
+    .then(person => {
       if (person) {
-          response.json(person.toJSON())
-        } else {
-          response.status(404).end()
-        }
-  })
-  .catch(error => next(error))
+        response.json(person.toJSON())
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 
@@ -58,30 +58,30 @@ app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (body.name === undefined) {
-  return res.status(400).json({ error: 'content missing' })
+    return res.status(400).json({ error: 'content missing' })
   }
 
   const newPerson = new Person({
-    name: body.name, 
+    name: body.name,
     number: body.number
-})
+  })
 
 
-newPerson.save().then(savedPerson => {
-  console.log(savedPerson.toJSON(), ' was succesfully saved')
-  res.json(savedPerson)
-})
-.catch(error => next(error))
+  newPerson.save().then(savedPerson => {
+    console.log(savedPerson.toJSON(), ' was succesfully saved')
+    res.json(savedPerson)
+  })
+    .catch(error => next(error))
 })
 
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-  .then(deletedPerson => {
-    const deletedName = deletedPerson.name
-    response.status(200).send(`${deletedName} was deleted`).end()
-  })
-  .catch(error => next(error))
+    .then(deletedPerson => {
+      const deletedName = deletedPerson.name
+      response.status(200).send(`${deletedName} was deleted`).end()
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
